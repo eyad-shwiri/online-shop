@@ -1,0 +1,35 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns="http://www.w3.org"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Login</ui:define>
+
+	<ui:define name="content">
+		<div class="product-card" style="max-width: 400px; margin: 0 auto;">
+			<h:form id="loginForm">
+				<h:messages globalOnly="true" style="color:red; list-style:none; padding:0;"/>
+
+				<div style="margin-bottom: 15px;">
+					<h:outputLabel for="email" value="E-Mail Adresse:" /><br/>
+					<h:inputText id="email" value="#{loginController.email}"
+								 required="true" requiredMessage="E-Mail ist erforderlich"
+								 style="width: 100%; padding: 8px;"/>
+					<h:message for="email" style="color:red; font-size: 0.8rem;"/>
+				</div>
+
+				<div style="margin-bottom: 15px;">
+					<h:outputLabel for="password" value="Passwort:" /><br/>
+					<h:inputSecret id="password" value="#{loginController.password}"
+								   required="true" requiredMessage="Passwort ist erforderlich"
+								   style="width: 100%; padding: 8px;"/>
+					<h:message for="password" style="color:red; font-size: 0.8rem;"/>
+				</div>
+
+				<h:commandButton value="Anmelden" action="#{loginController.login}"
+								 styleClass="btn btn-primary" style="width: 100%;"/>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,49 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns="http://www.w3.org"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Produkt bearbeiten</ui:define>
+
+	<ui:define name="content">
+		<div class="product-card" style="max-width: 600px; margin: 0 auto;">
+			<h2>Produkt bearbeiten (ID: #{adminProductController.product.id})</h2>
+
+			<h:form id="editForm">
+				<h:messages style="color:red;" />
+
+				<h:panelGrid columns="2" style="width: 100%;">
+					<h:outputLabel value="Name:" />
+					<h:inputText value="#{adminProductController.product.name}" required="true" style="width:100%"/>
+
+					<h:outputLabel value="Preis (€):" />
+					<h:inputText value="#{adminProductController.product.price}" required="true">
+						<f:convertNumber minFractionDigits="2" />
+					</h:inputText>
+
+					<h:outputLabel value="Lagerbestand:" />
+					<h:inputText value="#{adminProductController.product.stockQuantity}" />
+
+					<h:outputLabel value="Beschreibung:" />
+					<h:inputTextarea value="#{adminProductController.product.description}" rows="5" style="width:100%"/>
+
+					<h:outputLabel for="cat" value="Kategorie:" />
+					<h:selectOneMenu id="cat" value="#{adminProductController.product.category}" converter="categoryConverter">
+						<f:selectItems value="#{categoryController.getAllCategories()}" var="c"
+									   itemLabel="#{c.name}" itemValue="#{c}" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+
+				<div style="margin-top: 20px;">
+					<h:commandButton value="Änderungen speichern"
+									 action="#{adminProductController.update()}"
+									 styleClass="btn btn-primary" />
+
+					<h:link value="Abbrechen" outcome="products"
+							style="margin-left: 15px; color: gray;" />
+				</div>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,57 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns="http://www.w3.org"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Dein Warenkorb</ui:define>
+
+	<ui:define name="content">
+		<h:form id="cartForm">
+			<h:panelGroup rendered="#{empty cartController.items}">
+				<div class="product-card" style="text-align:center; padding: 50px;">
+					<p>Dein Warenkorb ist noch leer.</p>
+					<h:link outcome="index" value="Jetzt shoppen" styleClass="btn btn-primary"/>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{not empty cartController.items}">
+				<h:dataTable value="#{cartController.items}" var="item" styleClass="product-table">
+					<h:column>
+						<f:facet name="header">Produkt</f:facet>
+						#{item.product.name}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Menge</f:facet>
+						#{item.quantity}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Preis</f:facet>
+						<h:outputText value="#{item.product.price}">
+							<f:convertNumber type="currency" currencySymbol="€"/>
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<h:commandButton value="Entfernen" action="#{cartController.removeFromCart(item.product.id)}"
+										 styleClass="edit-button">
+							<f:ajax render="cartForm" />
+						</h:commandButton>
+					</h:column>
+				</h:dataTable>
+
+				<div style="text-align: right; margin-top: 20px;">
+					<h3>Gesamtsumme:
+						<h:outputText value="#{cartController.total}">
+							<f:convertNumber type="currency" currencySymbol="€"/>
+						</h:outputText>
+					</h3>
+					<h:commandButton value="Jetzt kostenpflichtig bestellen"
+									 action="#{cartController.checkout}"
+									 styleClass="btn btn-primary"
+									 style="font-size: 1.2rem; padding: 15px 30px;"/>
+				</div>
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,76 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns="http://www.w3.org"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Admin: Produktverwaltung</ui:define>
+
+	<ui:define name="content">
+		<!-- Alles wird innerhalb dieses einen ui:define blocks platziert -->
+		<div class="admin-container">
+
+			<!-- FORMULAR FÜR NEUES PRODUKT -->
+			<h:form id="createProductForm" style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+				<h2>Neues Produkt erstellen</h2>
+				<h:messages globalOnly="false" style="color:red;" />
+
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="name" value="Produktname:" />
+					<h:inputText id="name" value="#{adminProductController.product.name}" required="true" />
+
+					<h:outputLabel for="price" value="Preis (€):" />
+					<h:inputText id="price" value="#{adminProductController.product.price}" required="true">
+						<f:convertNumber minFractionDigits="2" />
+					</h:inputText>
+
+					<h:outputLabel for="stock" value="Lagerbestand:" />
+					<h:inputText id="stock" value="#{adminProductController.product.stockQuantity}" required="true" />
+
+					<h:outputLabel for="desc" value="Beschreibung:" />
+					<h:inputTextarea id="desc" value="#{adminProductController.product.description}" rows="3" />
+
+					<h:outputLabel for="cat" value="Kategorie:" />
+					<h:selectOneMenu id="cat" value="#{adminProductController.product.category}" converter="categoryConverter">
+						<f:selectItems value="#{categoryController.getAllCategories()}" var="c"
+									   itemLabel="#{c.name}" itemValue="#{c}" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+
+				<h:commandButton value="Produkt speichern"
+								 action="#{adminProductController.save()}"
+								 styleClass="btn btn-primary" style="margin-top: 10px;" />
+			</h:form>
+
+			<!-- TABELLE FÜR BESTEHENDE PRODUKTE -->
+			<h2>Bestehende Produkte verwalten</h2>
+
+			<!-- Die Tabelle benötigt ein eigenes h:form, wenn sie separate Aktionen ausführt (Löschen/Editieren) -->
+			<h:form id="productListForm">
+				<!-- Korrigierter Value-Binding zu adminProductController.products -->
+				<h:dataTable value="#{adminProductController.products}" var="p" styleClass="product-table">
+					<h:column><f:facet name="header">ID</f:facet>#{p.id}</h:column>
+					<h:column><f:facet name="header">Name</f:facet>#{p.name}</h:column>
+					<h:column>
+						<f:facet name="header">Preis</f:facet>
+						<h:outputText value="#{p.price}"><f:convertNumber type="currency" currencySymbol="€"/></h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Lagernd</f:facet>
+						<h:outputText
+								value="#{p.stockQuantity} Stk."
+								styleClass="stock-quantity #{p.stockQuantity eq 0 ? 'stock-low' : 'stock-high'}"
+						/>
+					</h:column>
+
+					<!-- Edit Spalte mit Icon -->
+					<h:column>
+						<f:facet name="header">Edit</f:facet>
+						<h:commandButton value="Produkt bearbeiten" action="#{adminProductController.edit(p)}" styleClass="edit-button" />
+					</h:column>
+
+				</h:dataTable>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
