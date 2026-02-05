@@ -1,0 +1,56 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="title">Unsere Angebote</ui:define>
+
+    <ui:define name="content">
+        <!-- Ein einziges Formular für alle Aktionen auf der Seite -->
+        <h:form id="mainForm">
+            <div>
+                <!-- Seitenleiste oder Filter (optional) -->
+                <div style="margin-bottom: 20px;">
+                    <h3>Filter</h3>
+
+                    <!-- NEUES FILTER-ELEMENT -->
+                    <h:selectOneMenu value="#{productController.selectedCategoryId}">
+                        <f:selectItem itemLabel="Alle Kategorien" itemValue="#{null}"/>
+                        <f:selectItems value="#{categoryController.allCategories}"
+                                       var="cat"
+                                       itemLabel="#{cat.name}"
+                                       itemValue="#{cat.id}"/>
+                        <!-- Ajax-Event: Bei Änderung die Produktliste im Hauptbereich neu rendern -->
+                        <f:ajax event="change" render=":mainForm:productListPanel" execute="@this"/>
+                    </h:selectOneMenu>
+                </div>
+
+
+                <!-- Hauptbereich: Produkte -->
+                <div style="flex: 3;">
+                    <h:panelGroup id="productListPanel">
+                        <div class="grid">
+							<ui:repeat value="#{productController.filteredProducts}" var="product">
+                                <div class="card">
+                                    <div class="title">#{product.name}</div>
+                                    <p style="color: #6B7280; font-size: 0.9rem;">#{product.description}</p>
+                                    <div class="price">
+                                        <h:outputText value="#{product.price}">
+                                            <f:convertNumber type="currency" currencySymbol="€"/>
+                                        </h:outputText>
+                                    </div>
+                                    <h:commandButton value="In den Warenkorb"
+                                                     action="#{cartController.addToCart(product)}"
+                                                     styleClass="btn-buy">
+                                        <!-- Optional: Ajax für besseres Nutzererlebnis -->
+                                        <f:ajax execute="@this" render=":headerCart"/>
+                                    </h:commandButton>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

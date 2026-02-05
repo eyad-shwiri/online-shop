@@ -1,11 +1,11 @@
 package de.shwiri.shop.controller;
 
+import de.shwiri.shop.annotations.Web;
 import de.shwiri.shop.model.Product;
 import de.shwiri.shop.model.OrderItem;
+import de.shwiri.shop.model.enums.Redirection;
 import de.shwiri.shop.service.OrderService;
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,8 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Named
-@SessionScoped
+@Web
 public class CartController implements Serializable {
 
     @Inject
@@ -23,8 +22,7 @@ public class CartController implements Serializable {
     @Inject
     private LoginController loginController;
 
-    // Map: Produkt-ID -> OrderItem (enthält Produkt & Menge)
-    private Map<Long, OrderItem> cartItems = new HashMap<>();
+    private final Map<Long, OrderItem> cartItems = new HashMap<>();
 
     public void addToCart(Product product) {
         if (cartItems.containsKey(product.getId())) {
@@ -43,14 +41,13 @@ public class CartController implements Serializable {
     }
 
     public BigDecimal getTotal() {
-        return cartItems.values().stream()
-                        .map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
+        return cartItems.values().stream().map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String checkout() {
         if (!loginController.isLoggedIn()) {
-            return "login?faces-redirect=true";
+            return Redirection.LOGIN.getRedirect();
         }
 
         if (cartItems.isEmpty()) {
@@ -63,7 +60,7 @@ public class CartController implements Serializable {
         // Warenkorb nach Erfolg leeren
         cartItems.clear();
 
-        return "order-success?faces-redirect=true";
+        return Redirection.ORDER_SUCCESS.getRedirect();
     }
 
     // Getter für die View

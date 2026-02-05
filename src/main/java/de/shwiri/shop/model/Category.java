@@ -56,16 +56,15 @@ public class Category implements Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
-        return (other instanceof Category) && (id != null)
-                ? id.equals(((Category) other).id)
-                : (other == this);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return id != null && id.equals(category.id);
     }
 
     @Override
     public int hashCode() {
-        return (id != null)
-                ? (this.getClass().hashCode() + id.hashCode())
-                : super.hashCode();
+        return id != null ? id.hashCode() : 0;
     }
 }

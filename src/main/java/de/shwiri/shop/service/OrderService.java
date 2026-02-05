@@ -16,10 +16,6 @@ public class OrderService {
     @PersistenceContext(unitName = "ShopPU")
     private EntityManager em;
 
-    /**
-     * Erstellt eine komplette Bestellung.
-     * Durch @Stateless ist diese Methode ACID-konform (Atomarität).
-     */
     public Order createOrder(User user, List<OrderItem> items) {
         Order order = new Order();
         order.setUser(user);
@@ -27,19 +23,15 @@ public class OrderService {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        // 1. Bestellung persistieren, um eine ID zu erhalten
         em.persist(order);
 
         for (OrderItem item : items) {
-            // Snapshot-Prinzip: Aktuellen Preis vom Produkt laden
             Product p = em.find(Product.class, item.getProduct().getId());
 
-            // Bestandsprüfung (Kreativitäts-Punkt für den Bericht!)
             if (p.getStockQuantity() < item.getQuantity()) {
                 throw new RuntimeException("Nicht genügend Lagerbestand für: " + p.getName());
             }
 
-            // Lagerbestand reduzieren
             p.setStockQuantity(p.getStockQuantity() - item.getQuantity());
 
             item.setOrder(order);

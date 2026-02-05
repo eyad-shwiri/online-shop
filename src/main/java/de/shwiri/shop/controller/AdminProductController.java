@@ -1,42 +1,31 @@
 package de.shwiri.shop.controller;
 
+import de.shwiri.shop.annotations.Web;
+import de.shwiri.shop.model.Category;
 import de.shwiri.shop.model.Product;
-import de.shwiri.shop.service.ProductService; // Angenommener Service für DB-Zugriff
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.context.FacesContext;
+import de.shwiri.shop.model.enums.Redirection;
+import de.shwiri.shop.service.CategoryService;
+import de.shwiri.shop.service.ProductService;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-@Named
-@SessionScoped
+@Web
 public class AdminProductController implements Serializable {
 
-    @Inject private ProductService productService;
+    @Inject
+    private ProductService productService;
 
-    @Inject private LoginController loginController;
+    @Inject
+    private CategoryService categoryService;
 
     private Product product = new Product();
+    private Product newProduct = new Product();
     private List<Product> cachedProducts;
-    private final String indexRedirect = "index?faces-redirect=true";
+    private Category category = new Category();
+    private Category newCategory = new Category();
+    private List<Category> cachedCategories;
 
-    @PostConstruct
-    public void init() {
-        try {
-            if (!loginController.isLoggedIn() || !loginController.isAdmin()) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("../login.xhtml");
-            } else if  (loginController.isLoggedIn() && !loginController.isAdmin()) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("../index.xhtml");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Lädt alle Produkte für die Übersichtstabelle
     public List<Product> getProducts() {
         if (cachedProducts == null) {
             cachedProducts = productService.findAll();
@@ -44,36 +33,81 @@ public class AdminProductController implements Serializable {
         return cachedProducts;
     }
 
-    // Navigiert zur Bearbeitungsseite eines Produkts
+    public List<Category> getCategories() {
+        if (cachedCategories == null) {
+            cachedCategories = categoryService.findAll();
+        }
+        return cachedCategories;
+    }
+
     public String edit(Product product) {
         this.product = product;
-        return "edit-product?faces-redirect=true";
+        return Redirection.EDIT_PRODUCT.getRedirect();
     }
 
     public String save() {
-        product.setId(null);
-
-        productService.save(product);
-        return indexRedirect;
+        productService.save(newProduct);
+        this.newProduct = new Product();
+        this.cachedProducts = null;
+        return Redirection.INDEX.getRedirect();
     }
 
     public String update() {
         productService.update(product);
-        return indexRedirect;
+        return Redirection.INDEX.getRedirect();
     }
 
-    // Löscht ein Produkt
-    public String delete(Long productId) {
-        productService.delete(productId);
-        return indexRedirect;
+    public String saveCategory() {
+        categoryService.save(newCategory);
+        this.newCategory = new Category();
+        this.cachedCategories = null;
+        return Redirection.INDEX.getRedirect();
     }
 
-    // Getter & Setter für das Produkt-Objekt (für Formular-Binding)
+    public String updateCategory() {
+        categoryService.update(category);
+        return Redirection.INDEX.getRedirect();
+    }
+
+    public String editCategory(Category category) {
+        this.category = category;
+        return Redirection.EDIT_CATEGORY.getRedirect();
+    }
+
+    public String delete(Long categoryId) {
+        categoryService.delete(categoryId);
+        this.cachedCategories = null;
+        return Redirection.PRODUCTS.getRedirect();
+    }
+
+    // Getter & Setter
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Product getNewProduct() {
+        return newProduct;
+    }
+
+    public void setNewProduct(Product newProduct) {
+        this.newProduct = newProduct;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Category getNewCategory() {
+        return newCategory;
+    }
+    public void setNewCategory(Category newCategory) {
+        this.newCategory = newCategory;
     }
 }

@@ -12,14 +12,26 @@ public class CategoryService {
     @PersistenceContext(unitName = "ShopPU")
     private EntityManager em;
 
-    public void createCategory(Category category) {
-        em.persist(category);
-    }
-
     public List<Category> findAll() {
         return em.createQuery("SELECT c FROM Category c", Category.class).getResultList();
     }
     public Category findById(Long id) {
         return em.find(Category.class, id);
+    }
+
+    public void save(Category category) {
+        category.setId(null);
+        em.persist(category);
+    }
+
+    public void update(Category category) {
+        em.merge(category);
+    }
+
+    public void delete(Long id) {
+        Category category = findById(id);
+        if (category != null) {
+            em.remove(em.contains(category) ? category : em.merge(category));
+        }
     }
 }

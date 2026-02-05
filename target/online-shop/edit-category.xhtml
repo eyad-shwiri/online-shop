@@ -1,0 +1,38 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+
+	<f:metadata>
+		<f:viewAction action="#{loginController.checkAdminAccess()}" />
+	</f:metadata>
+
+	<ui:define name="title">Kategorie bearbeiten</ui:define>
+
+	<ui:define name="content">
+		<div class="product-card" style="max-width: 600px; margin: 0 auto;">
+			<h2>Kategorie bearbeiten (ID: #{adminProductController.category.id})</h2>
+
+			<h:form id="editCategoryForm">
+				<h:messages style="color:red;" />
+
+				<h:panelGrid columns="2" style="width: 100%;">
+					<h:outputLabel value="Name:" />
+					<h:inputText value="#{adminProductController.category.name}" required="true" style="width:100%"/>
+
+					<h:outputLabel value="Beschreibung:" />
+					<h:inputTextarea value="#{adminProductController.category.description}" rows="2" style="width:100%"/>
+				</h:panelGrid>
+
+				<div style="margin-top: 20px;">
+					<h:commandButton value="Änderungen speichern"
+									 action="#{adminProductController.updateCategory()}"
+									 styleClass="edit-button" />
+
+					<h:link value="Abbrechen" outcome="products"
+							style="margin-left: 15px; color: gray;" />
+				</div>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

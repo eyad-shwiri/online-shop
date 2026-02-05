@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee"
+		xmlns:xsi="http://www.w3.org"
+		xsi:schemaLocation="https://jakarta.ee/persistence_3_0.xsd">
+
+	<persistence-unit name="ShopPU" transaction-type="JTA">
+		<jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>
+
+		<properties>
+			<!-- Ändern Sie den Namen am Ende der URL auf wildfly_db -->
+			<property name="javax.persistence.jdbc.url"
+					value="jdbc:postgresql://localhost:5432/wildfly_db" />
+
+			<property name="javax.persistence.jdbc.user" value="wildfly_user" />
+			<property name="javax.persistence.jdbc.password" value="password123" />
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+			<!-- 1. Deaktiviert die automatische Tabellenerstellung durch Hibernate -->
+			<property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+
+			<!-- 2. Validierung (Optional): Prüft beim Start, ob die Tabellen zur Entity passen -->
+			<!-- Falls Liquibase etwas vergessen hat, wirft WildFly beim Start einen Fehler -->
+			<property name="hibernate.hbm2ddl.auto" value="validate"/>
+
+			<!-- 3. Logging für Debugging -->
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.format_sql" value="true"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+		</properties>
+	</persistence-unit>
+</persistence>

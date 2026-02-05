@@ -26,4 +26,3 @@ public class CategoryConverter implements Converter<Category> {
         return String.valueOf(value.getId());
     }
 }
-
