@@ -1,6 +1,8 @@
 # online-shop
 hier wird ein Online Shop App erstellt
 
+der postgresql-driver für java (z.B. postgresql-42.7.9.jar) soll in die Hauptverzeichnis heruntergeladen werden.
+
 # Build
 mvn clean package && docker build -t de.shwiri/online-shop .
 
