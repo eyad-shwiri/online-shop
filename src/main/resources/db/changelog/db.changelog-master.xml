@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.29.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+	<!-- ChangeSet 001: Kategoriestruktur -->
+	<changeSet id="001" author="Eyad Shwiri">
+		<!-- Sequence für GenerationType.AUTO / IDENTITY -->
+		<createSequence sequenceName="categories_seq" startValue="1" incrementBy="1"/>
+
+		<!-- 2. Tabelle erstellen -->
+		<createTable tableName="categories">
+			<column name="id" type="BIGINT" defaultValueComputed="nextval('categories_seq')">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="VARCHAR(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="VARCHAR(255)"/>
+		</createTable>
+	</changeSet>
+
+	<!-- ChangeSet 002: Benutzerverwaltung -->
+	<changeSet id="002" author="Eyad Shwiri">
+		<createSequence sequenceName="users_seq" startValue="1" incrementBy="1"/>
+
+		<createTable tableName="users">
+			<column name="id" type="BIGINT" defaultValueComputed="nextval('users_seq')">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="email" type="VARCHAR(150)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="password_hash" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="role" type="VARCHAR(20)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<!-- ChangeSet 003: Produkte mit Referenz auf Kategorien -->
+	<changeSet id="003" author="Eyad Shwiri">
+		<createSequence sequenceName="products_seq" startValue="1" incrementBy="1"/>
+
+		<createTable tableName="products">
+			<column name="id" type="BIGINT" defaultValueComputed="nextval('products_seq')">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="price" type="DECIMAL(12,2)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="VARCHAR(1000)"/>
+			<column name="stock_quantity" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="category_id" type="BIGINT">
+				<constraints nullable="false"
+						foreignKeyName="fk_product_category"
+						referencedTableName="categories"
+						referencedColumnNames="id"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<!-- ChangeSet 004: Bestellkopf -->
+	<changeSet id="004" author="Eyad Shwiri">
+		<createSequence sequenceName="orders_seq" startValue="1" incrementBy="1"/>
+
+		<createTable tableName="orders">
+			<column name="id" type="BIGINT" defaultValueComputed="nextval('orders_seq')">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false"
+						foreignKeyName="fk_order_user"
+						referencedTableName="users"
+						referencedColumnNames="id"/>
+			</column>
+			<column name="order_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+			<column name="status" type="VARCHAR(50)"/>
+			<column name="total_amount" type="DECIMAL(12,2)"/>
+		</createTable>
+	</changeSet>
+
+	<!-- ChangeSet 005: Bestellpositionen (Snapshot-Prinzip) -->
+	<changeSet id="005" author="Eyad Shwiri">
+		<createSequence sequenceName="items_seq" startValue="1" incrementBy="1"/>
+
+		<createTable tableName="items">
+			<column name="id" type="BIGINT" defaultValueComputed="nextval('items_seq')">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="order_id" type="BIGINT">
+				<constraints nullable="false"
+						foreignKeyName="fk_item_order"
+						referencedTableName="orders"
+						referencedColumnNames="id"/>
+			</column>
+			<column name="product_id" type="BIGINT">
+				<constraints nullable="false"
+						foreignKeyName="fk_item_product"
+						referencedTableName="products"
+						referencedColumnNames="id"/>
+			</column>
+			<column name="quantity" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="price_at_purchase" type="DECIMAL(12,2)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<!-- ChangeSet 006: Performance-Optimierung durch Indizes -->
+	<changeSet id="006" author="Eyad Shwiri">
+		<!-- 1. Suche nach Produkten in einer Kategorie (Häufigster Use-Case) -->
+		<createIndex indexName="idx_product_category" tableName="products">
+			<column name="category_id"/>
+		</createIndex>
+
+		<!-- 2. Suche nach Bestellungen eines bestimmten Nutzers (Profilseite/Historie) -->
+		<createIndex indexName="idx_order_user" tableName="orders">
+			<column name="user_id"/>
+		</createIndex>
+
+		<!-- 3. Schneller Zugriff auf Bestellpositionen einer Bestellung -->
+		<createIndex indexName="idx_item_order" tableName="items">
+			<column name="order_id"/>
+		</createIndex>
+	</changeSet>
+
+	<!-- ChangeSet 007: insert synthetische Testdaten in die DB -->
+	<changeSet id="007" author="shwiri">
+		<sqlFile path="archive/import.sql"
+				relativeToChangelogFile="true"
+				encoding="UTF-8"/>
+	</changeSet>
+</databaseChangeLog>

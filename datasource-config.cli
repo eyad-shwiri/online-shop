@@ -1,0 +1,18 @@
+embed-server --server-config=standalone.xml
+
+# Modul und Treiber registrieren
+module add --name=org.postgresql --resources=/tmp/postgresql-42.7.9.jar --dependencies=javax.api,javax.transaction.api
+/subsystem=datasources/jdbc-driver=postgres:add(driver-name=postgres,driver-module-name=org.postgresql,driver-class-name=org.postgresql.Driver)
+
+# Datasource mit Umgebungsvariablen anlegen
+data-source add --name=PostgresDS \
+    --jndi-name=java:jboss/datasources/PostgresDS \
+    --driver-name=postgres \
+    --connection-url=jdbc:postgresql://${env.DB_HOST}/${env.DB_NAME} \
+    --user-name=${env.DB_USER} \
+    --password=${env.DB_PASS} \
+    --check-valid-connection-sql="SELECT 1" \
+    --background-validation=true \
+    --enabled=true
+
+stop-embedded-server

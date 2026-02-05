@@ -1,0 +1,199 @@
+/* Globale Einstellungen */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0; /* Padding wird durch main-content übernommen */
+    color: #333;
+}
+
+.main-content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Navigation Styling --- */
+.header {
+    background: #2c3e50;
+    color: white;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-links, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+}
+
+.nav-item:hover {
+    background-color: #34495e;
+}
+
+.cart-icon {
+    position: relative;
+    font-size: 1.2rem;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+}
+
+/* --- Produktkarten Styling --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    height: 50px;
+    overflow: hidden;
+}
+.price {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+.btn-buy {
+    background-color: #007bff; /* Hintergrundfarbe */
+    color: white;              /* Textfarbe */
+    padding: 10px 20px;        /* Innenabstand */
+    border: none;              /* Kein Rahmen */
+    border-radius: 5px;        /* Abgerundete Ecken */
+    font-size: 16px;           /* Schriftgröße */
+    cursor: pointer;           /* Zeiger-Cursor */
+    transition: background-color 0.3s ease; /* Sanfte Animation */
+}
+.btn-buy:hover {
+    background-color: #0056b3; /* Dunklere Farbe */
+}
+.btn-buy:active {
+    background-color: #004085;
+    transform: translateY(1px); /* Leichte Verschiebung nach unten */
+}
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.product-table {
+    /* Standard-Tabelleinstellungen */
+    width: 100%; /* Tabelle füllt den verfügbaren Platz aus */
+    border-collapse: collapse; /* Überlappende Ränder entfernen */
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Leichter Schatten für "Schwebe-Effekt" */
+    border-radius: 8px; /* Abgerundete Ecken */
+    overflow: hidden; /* Stellt sicher, dass der Radius sichtbar ist */
+}
+
+/* Stil für den Tabellenkopf (Header) */
+.product-table thead tr {
+    background-color: #009879; /* Eine schöne Akzentfarbe */
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+/* Stil für Zellen und Kopfzellen */
+.product-table th,
+.product-table td {
+    padding: 12px 15px; /* Abstand in den Zellen */
+}
+
+/* Zebra-Striping für abwechselnde Zeilen (macht es leichter lesbar) */
+.product-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.product-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3; /* Hellgrauer Hintergrund für jede zweite Zeile */
+}
+
+.product-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879; /* Dickere Linie am Ende der Tabelle */
+}
+
+/* Hover-Effekt für Interaktion */
+.product-table tbody tr:hover {
+    background-color: #e6f7f3;
+    cursor: pointer;
+}
+
+/* Ausrichtung von Zahlen (Best Practice UX) */
+.product-table td:nth-child(3), /* Preis */
+.product-table td:nth-child(4) { /* Lagernd */
+    text-align: right; /* Zahlen rechtsbündig ausrichten */
+}
+
+/* Stil für den "Produkt bearbeiten" Button, um ihn in die Tabelle zu integrieren */
+.product-table .edit-button {
+    background-color: #4CAF50; /* Grüne Farbe */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.product-table .edit-button:hover {
+    background-color: #45a049;
+}
+
+/* Styling für die Lagerbestandszahlen */
+.stock-quantity {
+    font-weight: bold; /* Optional: Hebt die Zahl hervor */
+}
+
+.stock-low {
+    color: red !important; /* !important kann nötig sein, falls andere Stile stärker sind */
+}
+
+.stock-high {
+    color: green !important;
+}

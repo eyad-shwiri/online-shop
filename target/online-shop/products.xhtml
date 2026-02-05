@@ -1,0 +1,119 @@
+<ui:composition template="/templates/layout.xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:f="jakarta.faces.core">
+	<f:metadata>
+		<f:viewAction action="#{loginController.checkAdminAccess()}" />
+	</f:metadata>
+
+	<ui:define name="title">Admin: Produktverwaltung</ui:define>
+
+	<ui:define name="content">
+		<!-- Alles wird innerhalb dieses einen ui:define blocks platziert -->
+		<div class="admin-container">
+
+			<!-- FORMULAR FÜR NEUES PRODUKT -->
+			<h:form id="createProductForm" style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+				<h2>Neues Produkt erstellen</h2>
+				<h:messages globalOnly="false" style="color:red;" />
+
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="name" value="Produktname:" />
+					<h:inputText id="name" value="#{adminProductController.newProduct.name}" required="true" />
+
+					<h:outputLabel for="price" value="Preis (€):" />
+					<h:inputText id="price" value="#{adminProductController.newProduct.price}" required="true">
+						<f:convertNumber minFractionDigits="2" />
+					</h:inputText>
+
+					<h:outputLabel for="stock" value="Lagerbestand:" />
+					<h:inputText id="stock" value="#{adminProductController.newProduct.stockQuantity}" required="true" />
+
+					<h:outputLabel for="desc" value="Beschreibung:" />
+					<h:inputTextarea id="desc" value="#{adminProductController.newProduct.description}" rows="3" />
+
+					<h:outputLabel for="cat" value="Kategorie:" />
+					<h:selectOneMenu id="cat" value="#{adminProductController.newProduct.category}" converter="categoryConverter">
+						<f:selectItems value="#{categoryController.getAllCategories()}" var="c"
+									   itemLabel="#{c.name}" itemValue="#{c}" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+
+				<h:commandButton value="Produkt speichern"
+								 action="#{adminProductController.save()}"
+								 styleClass="btn-buy" style="margin-top: 10px;" />
+			</h:form>
+
+			<!-- TABELLE FÜR BESTEHENDE PRODUKTE -->
+			<h2>Bestehende Produkte verwalten</h2>
+
+			<!-- Die Tabelle benötigt ein eigenes h:form, wenn sie separate Aktionen ausführt (Löschen/Editieren) -->
+			<h:form id="productListForm">
+				<!-- Korrigierter Value-Binding zu adminProductController.products -->
+				<h:dataTable value="#{adminProductController.products}" var="p" styleClass="product-table">
+					<h:column><f:facet name="header">ID</f:facet>#{p.id}</h:column>
+					<h:column><f:facet name="header">Name</f:facet>#{p.name}</h:column>
+					<h:column>
+						<f:facet name="header">Preis</f:facet>
+						<h:outputText value="#{p.price}"><f:convertNumber type="currency" currencySymbol="€"/></h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Lagernd</f:facet>
+						<h:outputText
+								value="#{p.stockQuantity} Stk."
+								styleClass="stock-quantity #{p.stockQuantity eq 0 ? 'stock-low' : 'stock-high'}"
+						/>
+					</h:column>
+
+					<!-- Edit Spalte mit Icon -->
+					<h:column>
+						<f:facet name="header">Edit</f:facet>
+						<h:commandButton value="Produkt bearbeiten" action="#{adminProductController.edit(p)}" styleClass="edit-button" />
+					</h:column>
+
+				</h:dataTable>
+			</h:form>
+		</div>
+		<!-- Alles wird innerhalb dieses einen ui:define blocks platziert -->
+		<div class="admin-container">
+
+			<!-- FORMULAR FÜR NEUE Kategorie -->
+			<h:form id="createCategoryForm" style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+				<h2>Neue Kategorie erstellen</h2>
+				<h:messages globalOnly="false" style="color:red;" />
+
+				<h:panelGrid columns="2" cellpadding="2">
+					<h:outputLabel for="name" value="Kategorienname:" />
+					<h:inputText id="name" value="#{adminProductController.newCategory.name}" required="true" />
+
+					<h:outputLabel for="desc" value="Beschreibung:" />
+					<h:inputTextarea id="desc" value="#{adminProductController.newCategory.description}" rows="2" />
+				</h:panelGrid>
+
+				<h:commandButton value="Kategorie speichern"
+								 action="#{adminProductController.saveCategory()}"
+								 styleClass="btn-buy"  style="margin-top: 10px;"/>
+			</h:form>
+
+			<!-- TABELLE FÜR BESTEHENDE PRODUKTE -->
+			<h2>Bestehende Kategorien verwalten</h2>
+
+			<!-- Die Tabelle benötigt ein eigenes h:form, wenn sie separate Aktionen ausführt (Löschen/Editieren) -->
+			<h:form id="categoryListForm">
+				<!-- Korrigierter Value-Binding zu adminProductController.products -->
+				<h:dataTable value="#{adminProductController.categories}" var="c" styleClass="product-table">
+					<h:column><f:facet name="header">ID</f:facet>#{c.id}</h:column>
+					<h:column><f:facet name="header">Name</f:facet>#{c.name}</h:column>
+					<h:column>
+						<f:facet name="header">Edit</f:facet>
+						<h:commandButton value="Kategorie bearbeiten" action="#{adminProductController.editCategory(c)}" styleClass="edit-button" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Löschen</f:facet>
+						<h:commandButton value="Kategorie entfernen" action="#{adminProductController.delete(c.id)}" styleClass="edit-button" />
+					</h:column>
+				</h:dataTable>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

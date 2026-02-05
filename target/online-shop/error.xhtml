@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/templates/layout.xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:ui="jakarta.faces.facelets">
+
+	<ui:define name="title">
+		Login Fehler
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="error-card">
+			<h1>Anmeldung fehlgeschlagen</h1>
+			<p>Benutzername oder Passwort ist falsch.</p>
+			<!-- Nutze h:link oder a href zurück zur login.xhtml -->
+			<h:link value="Zurück zum Login" outcome="login.xhtml" styleClass="btn" />
+		</div>
+	</ui:define>
+
+</ui:composition>

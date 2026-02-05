@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:h="jakarta.faces.html"
+	  xmlns:ui="jakarta.faces.facelets"
+	  xmlns:c="jakarta.tags.core">
+<h:head>
+	<title><ui:insert name="title">Online Shop</ui:insert></title>
+	<h:outputStylesheet library="css" name="style.css" />
+	<!-- Optionale Icon-Bibliothek für den Warenkorb (z.B. Font Awesome) -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com" />
+</h:head>
+<h:body>
+	<div class="header">
+		<div class="nav-container">
+			<!-- Linke Navigation -->
+			<div class="nav-links">
+				<h:link outcome="index" value="Unsere Angebote" styleClass="nav-item" />
+				<c:if test="#{loginController.isAdmin()}">
+					<h:link outcome="products" value="Verwaltung" styleClass="nav-item" />
+				</c:if>
+				<!-- Beispiel: Ein Link, der nur für Admins sichtbar ist -->
+				<h:link outcome="/admin/products"
+						value="Admin-Bereich"
+						rendered="#{request.isUserInRole('ADMIN')}" />
+			</div>
+
+			<!-- Rechte Navigation (Warenkorb & Logout) -->
+			<div class="nav-right">
+				<h:link id="headerCart" outcome="cart" styleClass="nav-item">
+					<span>🛒 Warenkorb: #{cartController.cartSize}</span>
+				</h:link>
+				<h:form style="display:inline;">
+					<h:commandLink action="#{loginController.logout()}" value="Logout (#{loginController.email})" styleClass="nav-item" />
+				</h:form>
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<ui:insert name="content">
+			<!-- Inhalt der spezifischen Seiten kommt hier rein -->
+		</ui:insert>
+	</div>
+
+	<div class="footer">
+		©2026 Eyad Shwiri - Onlineshop.
+	</div>
+
+</h:body>
+</html>
