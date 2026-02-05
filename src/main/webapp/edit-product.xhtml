@@ -38,13 +38,13 @@
 					</h:selectOneMenu>
 				</h:panelGrid>
 
-				<div style="margin-top: 20px;">
+				<div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
 					<h:commandButton value="Änderungen speichern"
 									 action="#{adminProductController.update()}"
-									 styleClass="edit-button" />
+									 styleClass="btn-buy" />
 
 					<h:link value="Abbrechen" outcome="products"
-							style="margin-left: 15px; color: gray;" />
+							style="color: gray;" />
 				</div>
 			</h:form>
 		</div>

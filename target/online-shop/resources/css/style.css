@@ -91,17 +91,21 @@ body {
     margin: 10px 0;
 }
 .btn-buy {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: auto; /* Sorgt dafür, dass der Button unten ist */
+    background-color: #007bff; /* Hintergrundfarbe */
+    color: white;              /* Textfarbe */
+    padding: 10px 20px;        /* Innenabstand */
+    border: none;              /* Kein Rahmen */
+    border-radius: 5px;        /* Abgerundete Ecken */
+    font-size: 16px;           /* Schriftgröße */
+    cursor: pointer;           /* Zeiger-Cursor */
+    transition: background-color 0.3s ease; /* Sanfte Animation */
 }
 .btn-buy:hover {
-    background: #219150;
+    background-color: #0056b3; /* Dunklere Farbe */
+}
+.btn-buy:active {
+    background-color: #004085;
+    transform: translateY(1px); /* Leichte Verschiebung nach unten */
 }
 
 .footer {

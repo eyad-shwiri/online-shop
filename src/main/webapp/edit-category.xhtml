@@ -24,13 +24,13 @@
 					<h:inputTextarea value="#{adminProductController.category.description}" rows="2" style="width:100%"/>
 				</h:panelGrid>
 
-				<div style="margin-top: 20px;">
+				<div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
 					<h:commandButton value="Änderungen speichern"
 									 action="#{adminProductController.updateCategory()}"
-									 styleClass="edit-button" />
+									 styleClass="btn-buy" />
 
 					<h:link value="Abbrechen" outcome="products"
-							style="margin-left: 15px; color: gray;" />
+							style="color: gray;" />
 				</div>
 			</h:form>
 		</div>
