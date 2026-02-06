@@ -1,6 +1,8 @@
 # online-shop
 hier wird ein Online Shop App erstellt
 
+docker-compose restart wildfly
+
 der postgresql-driver für java (z.B. postgresql-42.7.9.jar) soll in die Hauptverzeichnis heruntergeladen werden.
 
 # Build
